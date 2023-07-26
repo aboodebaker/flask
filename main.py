@@ -1,8 +1,10 @@
 from flask import Flask, jsonify
 import os
 from claude_api import Client
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 def get_cookie():
     # Your get_cookie function remains the same
