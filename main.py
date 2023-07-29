@@ -7,18 +7,20 @@ app = Flask(__name__)
 CORS(app)
 
 def get_cookie():
+  try:
     # Your get_cookie function remains the same
-    cookie = 'sessionKey=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'
+    cookie = os.environ.get('cookie')
     return cookie
+  except Exception as e:
+    print(e)
+
+cookie = get_cookie()
+claude = Client(cookie)
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    cookie = get_cookie()
-    claude = Client(cookie)
     conversation_id = request.json.get('conversation_id')
-
     user_input = request.json.get('user_input')
-
     if user_input.lower() == 'exit':
         return jsonify({'response': "Thank you!"})
 
@@ -28,7 +30,6 @@ def chat():
 
     response = claude.send_message(user_input, conversation_id)
     return jsonify({'response': response, 'conversation': conversation_id})
-
 
 if __name__ == '__main__':
     app.run()
